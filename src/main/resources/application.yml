@@ -1,0 +1,10 @@
+spring:
+    application:
+        name: supplier
+    r2dbc:
+        #url: r2dbc:postgresql://ep-long-tree-a567yxy3.us-east-2.aws.neon.tech/neondb?sslmode=require
+        #password: RPxZWiQy69vE
+        #username: neondb_owner
+        url: ${DATABASE_URL}
+        username: ${DATABASE_USERNAME}
+        password: ${DATABASE_PASSWORD}
