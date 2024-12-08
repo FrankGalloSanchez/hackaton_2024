@@ -10,7 +10,7 @@ public class Dni {
     @Id
     private Long id;
     private Boolean success;
-    private String dni;
+    private Integer dni;
     private String nombres;
     private String apellidoPaterno;
     private String apellidoMaterno;
