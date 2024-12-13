@@ -1,36 +1,58 @@
 package pe.edu.vallegrande.api_reniec.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import pe.edu.vallegrande.api_reniec.model.Dni;
 import pe.edu.vallegrande.api_reniec.service.DniService;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
 public class DniRest {
 
-    @Autowired
-    private DniService dniService;
+    private final DniService service;
+
+    public DniRest(DniService service) {
+        this.service = service;
+    }
+    @GetMapping
+    public Flux<Dni> getAllIpQueries() {
+        return service.getAll();
+    }
 
     @GetMapping("/dni/{dni}")
-    public Mono<Dni> getDniInfo(@PathVariable Long dni) {
-        return dniService.getDniInfo(dni);
+    public Mono<Dni> getDniInfo(@PathVariable String dni) {
+        return service.getDniInfo(Long.valueOf(dni));
     }
 
-    @DeleteMapping("/dni/{id}")
-    public Mono<Void> deleteDni(@PathVariable Long id) {
-        return dniService.deleteDni(id);
+    @GetMapping("/status")
+    public Flux<Dni> getIpQueriesByStatus(@RequestParam String status) {
+        return service.getByStatus(status);
     }
 
-    @GetMapping("/dni/id/{id}")
-    public Mono<Dni> getDniById(@PathVariable Long id) {
-        return dniService.getDniById(id);
+    @PutMapping("/restore/{id}")
+    public Mono<String> restored(@PathVariable Long id) {
+        return service.restoreDni(id);
+    }
+
+    @PutMapping("/update/{id}")
+    public Mono<String> updateDni(@PathVariable Long id, @RequestParam String dni) {
+        return service.updateDni(id, dni);
+    }
+
+    @PostMapping("/consultar")
+    public Mono<Dni> consultDni(@RequestParam String dni) {
+        return service.consultarYGuardarDni(dni);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Mono<String> deleteIp(@PathVariable Long id) {
+        return service.deleteDni(id);
+    }
+
+    @DeleteMapping("/delete/fisical/{id}")
+    public Mono<Void> delete(@PathVariable Long id) {
+        return service.deleteFisical(id);
     }
 }
